@@ -112,6 +112,14 @@ fi
 
 zoxide add "$RESULT" &>/dev/null # add to zoxide database
 FOLDER=$(basename "$RESULT")
+WORKSPACE_PREFIX="$HOME/workspace/"
+# It's a workspace
+if [[ $RESULT == $WORKSPACE_PREFIX* ]]; then
+  FOLDER=${RESULT#"$WORKSPACE_PREFIX"}
+  WORKSPACE=$(dirname $FOLDER | xargs dirname)
+  PKG=$(basename $FOLDER)
+  FOLDER="$WORKSPACE/$PKG"
+fi
 SESSION_NAME=$(echo "$FOLDER" | tr ' ' '_' | tr '.' '_' | tr ':' '_')
 
 if [ $TMUX_STATUS -eq 0 ]; then                                 # tmux is running
