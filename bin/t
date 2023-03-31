@@ -111,7 +111,16 @@ if [ $HOME_SED_SAFE -eq 0 ]; then
 fi
 
 zoxide add "$RESULT" &>/dev/null # add to zoxide database
-FOLDER=$(basename "$RESULT")
+
+# Check for existing session before pre-processing
+existing_sesion=$(tmux ls -F '#{session_name}' | grep "$RESULT")
+
+if [ -z $existing_sesion ]; then
+  FOLDER=$(basename "$RESULT")
+else
+  FOLDER="$RESULT"
+fi
+
 WORKSPACE_PREFIX="$HOME/workspace/"
 # It's a workspace
 if [[ $RESULT == $WORKSPACE_PREFIX* ]]; then
