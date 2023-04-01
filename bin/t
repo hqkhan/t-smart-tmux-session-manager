@@ -82,6 +82,8 @@ if [ $# -eq 0 ]; then             # no argument provided
 				--border-label "$BORDER_LABEL" \
 				--header "$HEADER" \
 				--prompt "$PROMPT" \
+        --reverse \
+        --color=border:yellow \
 				-p 60%,50%
 		)
 	fi
