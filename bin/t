@@ -95,42 +95,7 @@ get_sessions_by_mru() {
 	tmux list-sessions -F '#{session_last_attached} #{session_name}' | sort --numeric-sort --reverse | awk '{print $2}'
 }
 
-if [ $# -eq 0 ]; then             # no argument provided
-	if [ "$TMUX" = "" ]; then        # not in tmux
-		if [ $TMUX_STATUS -eq 0 ]; then # tmux is running
-			RESULT=$(
-				(tmux list-sessions -F '#S' && (zoxide query -l | sed -e "$HOME_REPLACER")) | fzf \
-					--bind "$DIR_BIND" \
-					--bind "$SESSION_BIND" \
-					--bind "$ZOXIDE_BIND" \
-					--border-label "$BORDER_LABEL" \
-					--header "$HEADER" \
-					--prompt "$PROMPT"
-			)
-		else # tmux is not running
-			RESULT=$(
-				(zoxide query -l | sed -e "$HOME_REPLACER") | fzf \
-					--bind "$DIR_BIND" \
-					--border-label "$BORDER_LABEL" \
-					--header " ctrl-d: directory" \
-					--prompt "$PROMPT"
-			)
-		fi
-	else # in tmux
-		RESULT=$(
-			(tmux list-sessions -F '#S' && (zoxide query -l | sed -e "$HOME_REPLACER")) | fzf-tmux \
-				--bind "$DIR_BIND" \
-				--bind "$SESSION_BIND" \
-				--bind "$ZOXIDE_BIND" \
-				--border-label "$BORDER_LABEL" \
-				--header "$HEADER" \
-				--prompt "$PROMPT" \
-        --reverse \
-        --color=border:yellow \
-				-p 60%,50%
-		)
-	fi
-else # argument provided
+if [ $# -eq 1 ]; then # argument provided
 	zoxide query "$1" &>/dev/null
 	ZOXIDE_RESULT_EXIT_CODE=$?
 	if [ $ZOXIDE_RESULT_EXIT_CODE -eq 0 ]; then # zoxide result found
@@ -158,6 +123,8 @@ else # argument not provided
 				--header "$HEADER" \
 				--no-sort \
 				--prompt "$PROMPT" \
+        --reverse \
+        --color=border:yellow \
 				-p 60%,50%
 		)
 		;;
@@ -172,6 +139,8 @@ else # argument not provided
 				--header "$HEADER" \
 				--no-sort \
 				--prompt "$PROMPT"
+        --reverse \
+        --color=border:yellow \
 		)
 		;;
 	serverless)
@@ -183,6 +152,8 @@ else # argument not provided
 				--header " ^f find" \
 				--no-sort \
 				--prompt "$PROMPT"
+        --reverse \
+        --color=border:yellow \
 		)
 		;;
 	esac
