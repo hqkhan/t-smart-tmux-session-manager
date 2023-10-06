@@ -178,10 +178,18 @@ else
   FOLDER="$RESULT"
 fi
 
-WORKSPACE_PREFIX="$HOME/workspace/"
+WORKSPACE_PREFIX="/local/home/$USER/workspace/"
+WORKSPACE_PREFIX2="/home/$USER/workspace/"
 # It's a workspace
 if [[ $RESULT == $WORKSPACE_PREFIX* ]]; then
   FOLDER=${RESULT#"$WORKSPACE_PREFIX"}
+  WORKSPACE=$(dirname $FOLDER | xargs dirname)
+  PKG=$(basename $FOLDER)
+  FOLDER="$WORKSPACE/$PKG"
+fi
+
+if [[ $RESULT == $WORKSPACE_PREFIX2* ]]; then
+  FOLDER=${RESULT#"$WORKSPACE_PREFIX2"}
   WORKSPACE=$(dirname $FOLDER | xargs dirname)
   PKG=$(basename $FOLDER)
   FOLDER="$WORKSPACE/$PKG"
